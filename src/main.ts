@@ -25,12 +25,12 @@ class Position implements Position {
 }
 
 class Employee {
-  name;
-  surname;
-  patronomic;
-  position;
-  salary;
-  status;
+  name: string;
+  surname: string;
+  patronomic: string;
+  position: number;
+  salary: number;
+  status: boolean;
   constructor(dataEmployee: Employee) {
     this.id = dataEmployee.id;
     this.name = dataEmployee.name;
@@ -60,9 +60,17 @@ class Department {
     this.employeers.splice(this.findIndexEmployee(id), 1, dataEmployee);
   }
   findIndexEmployee(id: number): number {
-    return this.employeers.findIndex((employee) => {
-      return employee.id === id;
-    });
+    let index: number = -1;
+    for (let i = 0; i < this.employeers.length; i++) {
+      if (this.employeers[i].id !== id) {
+        continue;
+      }
+      index = i;
+    }
+    return index;
+    // return this.employeers.findIndex((employee) => {
+    //   return employee.id === id;
+    // });
   }
   getSalarys(status: boolean): number {
     let salarys: number = 0;
@@ -704,7 +712,7 @@ class RestoranRender {
   createPositionList(): Record<string, string> {
     const result: Record<string, string> = {};
     for (let position of this.positions) {
-      Object.assign(result, { [position.id]: position.title });
+      result[position.id] = position.title;
     }
     return result;
   }
@@ -732,9 +740,7 @@ class RestoranRender {
   createDapertmentList(): Record<string, string> {
     const departmentList: Record<string, string> = {};
     this.departments.forEach((department) => {
-      Object.assign(departmentList, {
-        [department.id]: department.title,
-      });
+      departmentList[department.id] = department.title;
     });
     return departmentList;
   }
@@ -751,7 +757,10 @@ class RestoranRender {
     for (let parameter in parameters) {
       select.append(new Option(parameters[parameter], parameter));
     }
-    Object.assign(select, props);
+    for (let prop in props) {
+      select.setAttribute(prop, props[prop]);
+    }
+    // Object.assign(select, props);
     return select;
   }
   getSelectValue(select: HTMLSelectElement): string {

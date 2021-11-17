@@ -32,9 +32,17 @@ class Department {
         this.employeers.splice(this.findIndexEmployee(id), 1, dataEmployee);
     }
     findIndexEmployee(id) {
-        return this.employeers.findIndex((employee) => {
-            return employee.id === id;
-        });
+        let index = -1;
+        for (let i = 0; i < this.employeers.length; i++) {
+            if (this.employeers[i].id !== id) {
+                continue;
+            }
+            index = i;
+        }
+        return index;
+        // return this.employeers.findIndex((employee) => {
+        //   return employee.id === id;
+        // });
     }
     getSalarys(status) {
         let salarys = 0;
@@ -543,7 +551,7 @@ class RestoranRender {
     createPositionList() {
         const result = {};
         for (let position of this.positions) {
-            Object.assign(result, { [position.id]: position.title });
+            result[position.id] = position.title;
         }
         return result;
     }
@@ -570,9 +578,7 @@ class RestoranRender {
     createDapertmentList() {
         const departmentList = {};
         this.departments.forEach((department) => {
-            Object.assign(departmentList, {
-                [department.id]: department.title,
-            });
+            departmentList[department.id] = department.title;
         });
         return departmentList;
     }
@@ -586,7 +592,10 @@ class RestoranRender {
         for (let parameter in parameters) {
             select.append(new Option(parameters[parameter], parameter));
         }
-        Object.assign(select, props);
+        for (let prop in props) {
+            select.setAttribute(prop, props[prop]);
+        }
+        // Object.assign(select, props);
         return select;
     }
     getSelectValue(select) {
